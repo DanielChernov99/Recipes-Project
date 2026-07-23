@@ -9,11 +9,42 @@ async function readRecipes() {
   return JSON.parse(data);
 }
 
-async function wrtieRecipes(recipes) {
+async function writeRecipes(recipes) {
   await fs.promises.writeFile(recipesPath, JSON.stringify(recipes, null, 2));
 }
 
-async function getRecipes(query = {}) {}
+async function getRecipes(query = {}) {
+  const { difficulty, maxCookingTime, search } = query;
+
+  let recipes = await readRecipes();
+
+  if (difficulty) {
+    recipes = recipes.filter((r) => {
+      return r.difficulty === difficulty;
+    });
+  }
+
+  if (maxCookingTime) {
+    const maxTime = Number(maxCookingTime);
+
+    recipes = recipes.filter((r) => {
+      return r.cookingTime <= maxTime;
+    });
+  }
+
+  if (search) {
+    const searchValue = search.toLowerCase();
+
+    recipes = recipes.filter((r) => {
+      return (
+        r.title.toLowerCase().includes(searchValue) ||
+        r.description.toLowerCase().includes(searchValue)
+      );
+    });
+  }
+
+  return recipes;
+}
 
 async function getRecipeById(id) {}
 
