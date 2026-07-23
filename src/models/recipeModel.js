@@ -46,9 +46,25 @@ async function getRecipes(query = {}) {
   return recipes;
 }
 
-async function getRecipeById(id) {}
+async function getRecipeById(id) {
+  let recipes = await readRecipes();
+  const recipe = recipes.find((r) => r.id === id);
+  return recipe;
+}
 
-async function addRecipe(recipeData) {}
+async function addRecipe(recipeData) {
+  let recipes = await readRecipes();
+  const newRecipe = {
+    ...recipeData,
+    id: uuidv4(),
+    rating: recipeData.rating ?? 0,
+    createdAt: new Date().toISOString(),
+  };
+  recipes.push(newRecipe);
+  await writeRecipes(recipes);
+
+  return newRecipe;
+}
 
 async function updateRecipe(id, data) {}
 
