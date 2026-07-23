@@ -66,9 +66,46 @@ async function addRecipe(recipeData) {
   return newRecipe;
 }
 
-async function updateRecipe(id, data) {}
+async function updateRecipe(id, data) {
+  const recipes = await readRecipes();
 
-async function deleteRecipe(id) {}
+  const recipeIndex = recipes.findIndex((recipe) => recipe.id === id);
+
+  if (recipeIndex === -1) {
+    return null;
+  }
+
+  const currentRecipe = recipes[recipeIndex];
+
+  const updatedRecipe = {
+    ...currentRecipe,
+    ...data,
+    id: currentRecipe.id,
+    createdAt: currentRecipe.createdAt,
+  };
+
+  recipes[recipeIndex] = updatedRecipe;
+
+  await writeRecipes(recipes);
+
+  return updatedRecipe;
+}
+
+async function deleteRecipe(id) {
+  const recipes = await readRecipes();
+
+  const recipeIndex = recipes.findIndex((recipe) => recipe.id === id);
+
+  if (recipeIndex === -1) {
+    return false;
+  }
+
+  recipes.splice(recipeIndex, 1);
+
+  await writeRecipes(recipes);
+
+  return true;
+}
 
 async function getStats() {}
 
