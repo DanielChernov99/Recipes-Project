@@ -47,13 +47,13 @@ async function getRecipes(query = {}) {
 }
 
 async function getRecipeById(id) {
-  let recipes = await readRecipes();
+  const recipes = await readRecipes();
   const recipe = recipes.find((r) => r.id === id);
   return recipe;
 }
 
 async function addRecipe(recipeData) {
-  let recipes = await readRecipes();
+  const recipes = await readRecipes();
   const newRecipe = {
     ...recipeData,
     id: uuidv4(),
@@ -107,7 +107,33 @@ async function deleteRecipe(id) {
   return true;
 }
 
-async function getStats() {}
+async function getStats() {
+  const recipes = await readRecipes();
+  const totalRecipes = recipes.length;
+
+  const totalCookingTime = recipes.reduce((sum, recipe) => {
+    return sum + recipe.cookingTime;
+  }, 0);
+
+  const averageCookingTime =
+    totalRecipes === 0 ? 0 : totalCookingTime / totalRecipes;
+
+  const recipesByDifficulty = {
+    easy: 0,
+    medium: 0,
+    hard: 0,
+  };
+
+  recipes.forEach((recipe) => {
+    recipesByDifficulty[recipe.difficulty]++;
+  });
+
+  return {
+    totalRecipes,
+    averageCookingTime,
+    recipesByDifficulty,
+  };
+}
 
 module.exports = {
   getRecipes,
