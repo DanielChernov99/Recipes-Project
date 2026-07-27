@@ -1,21 +1,12 @@
 const recipeSchema = require("../schemas/recipeSchema.js");
 
 function validateRecipe(req, res, next) {
-  const result = recipeSchema.safeParse(req.body);
-  if (!result.success) {
-    const validationErrors = result.error.issues.map((issue) => ({
-      field: issue.path.join("."),
-      message: issue.message,
-    }));
-
-    return res.status(400).json({
-      error: true,
-      message: "Recipe validation failed",
-      statusCode: 400,
-      details: validationErrors,
-    });
+  try {
+    req.body = recipeSchema.parse(req.body);
+    next();
+  } catch (error) {
+    next(error);
   }
-  req.body = result.data;
-
-  next();
 }
+
+module.exports = validateRecipe;

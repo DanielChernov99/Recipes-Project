@@ -7,24 +7,12 @@ const updateRecipeSchema = recipeSchema
   });
 
 function validateRecipeUpdate(req, res, next) {
-  const result = updateRecipeSchema.safeParse(req.body);
-
-  if (!result.success) {
-    const validationErrors = result.error.issues.map((issue) => ({
-      field: issue.path.join("."),
-      message: issue.message,
-    }));
-
-    return res.status(400).json({
-      error: true,
-      message: "Recipe validation failed",
-      statusCode: 400,
-      details: validationErrors,
-    });
+  try {
+    req.body = updateRecipeSchema.parse(req.body);
+    next();
+  } catch (error) {
+    next(error);
   }
-
-  req.body = result.data;
-  next();
 }
 
 module.exports = validateRecipeUpdate;

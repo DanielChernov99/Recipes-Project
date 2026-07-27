@@ -68,3 +68,12 @@ async function getStats(req, res) {
     data: stats,
   });
 }
+
+module.exports = {
+  getRecipes,
+  getRecipeById,
+  addRecipe,
+  updateRecipe,
+  deleteRecipe,
+  getStats,
+};

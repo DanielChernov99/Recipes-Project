@@ -1,6 +1,6 @@
 const express = require("express");
-const validateRecipe = require("../middlewares/validateRecipe.js");
-const validateRecipeUpdate = require("../middlewares/validateRecipeUpdate.js");
+const validateRecipe = require("../middleware/validateRecipe.js");
+const validateRecipeUpdate = require("../middleware/validateRecipeUpdate.js");
 
 const {
   getRecipes,
