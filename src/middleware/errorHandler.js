@@ -9,7 +9,7 @@ function errorHandler(error, req, res, next) {
 
     return res.status(400).json({
       error: true,
-      message: "Validation failed",
+      message: "Recipe validation failed",
       statusCode: 400,
       details: validationErrors,
     });
@@ -17,9 +17,16 @@ function errorHandler(error, req, res, next) {
 
   const statusCode = error.statusCode || error.status || 500;
 
-  res.status(statusCode).json({
+  if (statusCode >= 500) {
+    console.error(error);
+  }
+
+  return res.status(statusCode).json({
     error: true,
-    message: statusCode >= 500 ? "Internal server error" : error.message,
+    message:
+      statusCode >= 500
+        ? "Internal server error"
+        : error.message || "Request failed",
     statusCode,
   });
 }
